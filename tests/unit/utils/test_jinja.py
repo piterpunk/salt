@@ -1358,6 +1358,7 @@ class TestCustomExtensions(TestCase):
         )
         self.assertEqual(rendered, "16777216")
 
+    @pytest.mark.flaky(max_runs=4)
     @pytest.mark.requires_network
     def test_http_query(self):
         """
