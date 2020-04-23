@@ -14,6 +14,7 @@ import re
 import shutil
 import tempfile
 
+import pytest
 import salt.config
 import salt.modules.config as config
 import salt.modules.virt as virt
@@ -187,6 +188,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         devs = root.findall(".//boot")
         self.assertTrue(len(devs) == 2)
 
+    @pytest.mark.slow_test(seconds=1)  # Test takes >0.5 and <=1 seconds
     def test_gen_xml_no_nic(self):
         """
         Test virt._gen_xml() serial console
@@ -280,6 +282,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             int(root.find("devices/console/source").attrib["service"]), int
         )
 
+    @pytest.mark.slow_test(seconds=1)  # Test takes >0.5 and <=1 seconds
     def test_gen_xml_for_serial_no_console(self):
         """
         Test virt._gen_xml() with no serial console
@@ -570,6 +573,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         mac = iface.find("mac").attrib["address"]
         self.assertTrue(re.match("^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$", mac, re.I))
 
+    @pytest.mark.slow_test(seconds=1)  # Test takes >0.5 and <=1 seconds
     def test_gen_xml_for_esxi_default_profile(self):
         """
         Test virt._gen_xml(), ESXi/vmware default profile case
@@ -2501,6 +2505,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             "192.168.2.125",
         )
 
+    @pytest.mark.slow_test(seconds=1)  # Test takes >0.5 and <=1 seconds
     def test_domain_capabilities(self):
         """
         Test the virt.domain_capabilities parsing
@@ -2744,6 +2749,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             net,
         )
 
+    @pytest.mark.slow_test(seconds=1)  # Test takes >0.5 and <=1 seconds
     def test_network_info_all(self):
         """
         Test virt.network_info()
@@ -3153,6 +3159,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             pool,
         )
 
+    @pytest.mark.slow_test(seconds=1)  # Test takes >0.5 and <=1 seconds
     def test_pool_info_notarget(self):
         """
         Test virt.pool_info()
@@ -3210,6 +3217,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         pool = virt.pool_info("foo")
         self.assertEqual({}, pool)
 
+    @pytest.mark.slow_test(seconds=1)  # Test takes >0.5 and <=1 seconds
     def test_pool_info_all(self):
         """
         Test virt.pool_info()
@@ -3273,6 +3281,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
             pool,
         )
 
+    @pytest.mark.slow_test(seconds=1)  # Test takes >0.5 and <=1 seconds
     def test_pool_get_xml(self):
         """
         Test virt.pool_get_xml
@@ -3628,6 +3637,7 @@ class VirtTestCase(TestCase, LoaderModuleMockMixin):
         self.mock_conn.storagePoolDefineXML.assert_not_called()
         mock_secret.setValue.assert_called_once_with(b"secret")
 
+    @pytest.mark.slow_test(seconds=1)  # Test takes >0.5 and <=1 seconds
     def test_pool_update_password_create(self):
         """
         Test the pool_update function, where the password only is changed
