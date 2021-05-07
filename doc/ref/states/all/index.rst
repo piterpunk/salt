@@ -301,6 +301,7 @@ state modules
     supervisord
     svn
     sysctl
+    sysfs
     syslog_ng
     sysrc
     telemetry_alert
