@@ -6794,8 +6794,6 @@ def patch(
         )
         return ret
 
-    options = sanitized_options
-
     try:
         source_match = __salt__["file.source_list"](source, source_hash, __env__)[0]
     except CommandExecutionError as exc:
