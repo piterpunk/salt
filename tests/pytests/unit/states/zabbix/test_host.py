@@ -1226,10 +1226,22 @@ def test_update_inventory_values(basic_host_configuration, existing_host_respons
             "zabbix.host_inventory_set": mock_host_inventory_set,
         },
     ):
-        assert (
-            zabbix_host.present(host, groups, interfaces, inventory=inventory, **kwargs)
-            == ret
+        # Blame Python 3.5 support for all this black magic
+        host_present_ret = zabbix_host.present(
+            host, groups, interfaces, inventory=inventory, **kwargs
         )
+        host_present_changes = ast.literal_eval(
+            host_present_ret["changes"]["inventory"]
+        )
+        assert host_present_changes == ast.literal_eval(ret["changes"]["inventory"])
+        assert host_present_ret["comment"] == "Host new_host updated."
+        assert host_present_ret["name"] == "new_host"
+        assert host_present_ret["result"] is True
+        # When Python 3.5 is gone, the following line does the job:
+        # assert (
+        #    zabbix_host.present(host, groups, interfaces, inventory=inventory, **kwargs)
+        #    == ret
+        # )
         mock_host_inventory_set.assert_called_with(
             "31337",
             _connection_password="XXXXXXXXXX",
@@ -1293,10 +1305,22 @@ def test_update_inventory_keys(basic_host_configuration, existing_host_responses
             "zabbix.host_inventory_set": mock_host_inventory_set,
         },
     ):
-        assert (
-            zabbix_host.present(host, groups, interfaces, inventory=inventory, **kwargs)
-            == ret
+        # Blame Python 3.5 support for all this black magic
+        host_present_ret = zabbix_host.present(
+            host, groups, interfaces, inventory=inventory, **kwargs
         )
+        host_present_changes = ast.literal_eval(
+            host_present_ret["changes"]["inventory"]
+        )
+        assert host_present_changes == ast.literal_eval(ret["changes"]["inventory"])
+        assert host_present_ret["comment"] == "Host new_host updated."
+        assert host_present_ret["name"] == "new_host"
+        assert host_present_ret["result"] is True
+        # When Python 3.5 is gone, the following line does the job:
+        # assert (
+        #    zabbix_host.present(host, groups, interfaces, inventory=inventory, **kwargs)
+        #    == ret
+        # )
         mock_host_inventory_set.assert_called_with(
             "31337",
             _connection_password="XXXXXXXXXX",
@@ -1357,17 +1381,34 @@ def test_update_inventory_values_without_clear_existing_data(
             "zabbix.host_inventory_set": mock_host_inventory_set,
         },
     ):
-        assert (
-            zabbix_host.present(
-                host,
-                groups,
-                interfaces,
-                inventory=inventory,
-                inventory_clean=False,
-                **kwargs
-            )
-            == ret
+        # Blame Python 3.5 support for all this black magic
+        host_present_ret = zabbix_host.present(
+            host,
+            groups,
+            interfaces,
+            inventory=inventory,
+            inventory_clean=False,
+            **kwargs
         )
+        host_present_changes = ast.literal_eval(
+            host_present_ret["changes"]["inventory"]
+        )
+        assert host_present_changes == ast.literal_eval(ret["changes"]["inventory"])
+        assert host_present_ret["comment"] == "Host new_host updated."
+        assert host_present_ret["name"] == "new_host"
+        assert host_present_ret["result"] is True
+        # When Python 3.5 is gone, the following line does the job:
+        # assert (
+        #    zabbix_host.present(
+        #        host,
+        #        groups,
+        #        interfaces,
+        #        inventory=inventory,
+        #        inventory_clean=False,
+        #        **kwargs
+        #    )
+        #    == ret
+        # )
         mock_host_inventory_set.assert_called_with(
             "31337",
             _connection_password="XXXXXXXXXX",
@@ -1545,10 +1586,22 @@ def test_update_inventory_and_restore_inventory_mode(
             "zabbix.host_update": mock_host_update,
         },
     ):
-        assert (
-            zabbix_host.present(host, groups, interfaces, inventory=inventory, **kwargs)
-            == ret
+        # Blame Python 3.5 support for all this black magic
+        host_present_ret = zabbix_host.present(
+            host, groups, interfaces, inventory=inventory, **kwargs
         )
+        host_present_changes = ast.literal_eval(
+            host_present_ret["changes"]["inventory"]
+        )
+        assert host_present_changes == ast.literal_eval(ret["changes"]["inventory"])
+        assert host_present_ret["comment"] == "Host new_host updated."
+        assert host_present_ret["name"] == "new_host"
+        assert host_present_ret["result"] is True
+        # When Python 3.5 is gone, the following line does the job:
+        # assert (
+        #    zabbix_host.present(host, groups, interfaces, inventory=inventory, **kwargs)
+        #    == ret
+        # )
         mock_host_inventory_set.assert_called_with(
             "31337",
             _connection_password="XXXXXXXXXX",
