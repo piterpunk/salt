@@ -1471,8 +1471,10 @@ def host_inventory_set(hostid, **connection_args):
 
             if connection_args.get("clear_old"):
                 clear_old = True
-
             connection_args.pop("clear_old", None)
+
+            inventory_mode = connection_args.pop("inventory_mode", "0")
+
             inventory_params = dict(_params_extend(params, **connection_args))
             for key in inventory_params:
                 params.pop(key, None)
@@ -1485,7 +1487,7 @@ def host_inventory_set(hostid, **connection_args):
                 ret = _query(method, params, conn_args["url"], conn_args["auth"])
 
             # Set inventory mode to manual in order to submit inventory data
-            params["inventory_mode"] = "0"
+            params["inventory_mode"] = inventory_mode
             params["inventory"] = inventory_params
             ret = _query(method, params, conn_args["url"], conn_args["auth"])
             return ret["result"]
