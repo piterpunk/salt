@@ -427,6 +427,7 @@ execution modules
     serverdensity_device
     servicenow
     slack_notify
+    slackpkg
     slackware_service
     slsutil
     smartos_imgadm
