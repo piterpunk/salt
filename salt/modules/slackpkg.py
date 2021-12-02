@@ -7,6 +7,7 @@ import copy
 import glob
 import logging
 import os
+import re
 
 import salt.utils.decorators.path
 import salt.utils.itertools
@@ -308,7 +309,10 @@ def install(
             cmd += "install "
             cmd += to_install
             out = __salt__["cmd.run_all"](
-                cmd, ignore_retcode=True, output_loglevel="trace"
+                cmd,
+                ignore_retcode=True,
+                output_loglevel="trace",
+                env='{"TERSE": "0"}',
             )
 
             if 1 == out["retcode"]:
@@ -319,7 +323,10 @@ def install(
             cmd += "reinstall "
             cmd += to_reinstall
             out = __salt__["cmd.run_all"](
-                cmd, ignore_retcode=True, output_loglevel="trace"
+                cmd,
+                ignore_retcode=True,
+                output_loglevel="trace",
+                env='{"TERSE": "0"}',
             )
 
             if 1 == out["retcode"]:
@@ -407,7 +414,10 @@ def upgrade(
         if pkg_params == "all system":
             cmd += "upgrade-all"
             out = __salt__["cmd.run_all"](
-                cmd, ignore_retcode=True, output_loglevel="trace"
+                cmd,
+                ignore_retcode=True,
+                output_loglevel="trace",
+                env='{"TERSE": "0"}',
             )
 
             if 1 == out["retcode"]:
@@ -422,7 +432,10 @@ def upgrade(
                 cmd += "upgrade "
                 cmd += to_upgrade
                 out = __salt__["cmd.run_all"](
-                    cmd, ignore_retcode=True, output_loglevel="trace"
+                    cmd,
+                    ignore_retcode=True,
+                    output_loglevel="trace",
+                    env='{"TERSE": "0"}',
                 )
 
         if 1 == out["retcode"]:
@@ -484,3 +497,39 @@ def remove(name=None, pkgs=None, test=False, **kwargs):
         )
 
     return ret
+
+
+def list_upgrades(refresh=True, **kwargs):  # pylint: disable=W0613
+    """
+    Lists all packages available for update.
+
+    refresh : True
+        Runs a full package database refresh before listing. Set to ``False`` to
+        disable running the refresh.
+
+    CLI Example:
+
+    .. code-block:: bash
+
+        salt '*' pkg.list_upgrades
+        salt '*' pkg.list_upgrades refresh=False
+    """
+    if salt.utils.data.is_true(refresh):
+        refresh_db()
+
+    cmd = "/usr/sbin/slackpkg -batch=on -default_answer=n upgrade-all "
+    pkgregex = re.compile(r"(.*)\.t.z$")
+    upgrades = {}
+
+    lines = __salt__["cmd.run_stdout"](
+        cmd,
+        ignore_retcode=True,
+        output_loglevel="trace",
+        env='{"TERSE": "0"}',
+    ).splitlines()
+    for line in lines:
+        pkgname = pkgregex.match(line)
+        if pkgname:
+            package = _pkginfo(pkgname[1])
+            upgrades[package[0]] = "{}-{}".format(package[1], package[3])
+    return upgrades
